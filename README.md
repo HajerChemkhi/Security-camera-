@@ -1,83 +1,21 @@
-import smtplib,ssl  
-from picamera import PiCamera  
-from time import sleep  
-from email.mime.multipart import MIMEMultipart  
-from email.mime.base import MIMEBase  
-from email.mime.text import MIMEText  
-from email.utils import formatdate  
-from email import encoders  
-import picamera
-import time
-import RPi.GPIO as GPIO
-import time
-from time import sleep
+# Raspberry Pi Security Camera with Ultrasonic Sensor
 
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
+This project uses a Raspberry Pi along with a camera module and an ultrasonic sensor to create a simple security system. When motion is detected by the ultrasonic sensor, the Raspberry Pi captures a photo using the camera module and sends it to a specified email address via SMTP.
 
-trig = 2
-echo = 3
+## Requirements
 
-GPIO.setup(trig,GPIO.OUT)
-GPIO.setup(echo,GPIO.IN)
+- Raspberry Pi (tested on Raspberry Pi 3 Model B+)
+- Raspberry Pi Camera Module
+- Ultrasonic Sensor (HC-SR04)
+- Python 3
+- RPi.GPIO library
+- picamera library
+- smtplib library
 
-#camera = PiCamera()  
-  
-#camera.start_preview()  
-#sleep(5)  
-#camera.capture('testshot.jpg')     # image path set
-#sleep(5)  
-#camera.stop_preview()  
-while(True):
+## Installation
 
-  print( "satrt mesurement...")
+1. Connect the Ultrasonic Sensor and Camera Module to the Raspberry Pi.
+2. Clone this repository to your Raspberry Pi:
 
-  GPIO.output(trig,0)
-  GPIO.output(trig,1)
-  time.sleep(0.00001)
-  GPIO.output(trig,0)
-
-  while GPIO.input(echo) == 0:
-     pass
-  start = time.time()
-
-  while GPIO.input(echo) == 1:
-    pass
-  stop=time.time()
-  distance = (stop-start)*17000
-  print (distance,'cm' )
-  time.sleep(0.5)
-   
-  toaddr = '@gmail.com'      # To id 
-  me = '@gmail.com'          # your id
-  subject = "What's News"              # Subject
-  
-  msg = MIMEMultipart()  
-  msg['Subject'] = subject  
-  msg['From'] = me  
-  msg['To'] = toaddr  
-  msg.preamble = "test "   
-    #msg.attach(MIMEText(text)) 
-  if distance <10: 
-    camera = picamera.PiCamera()
-    camera.capture('testshot.jpg')
-
-    part = MIMEBase('application', "octet-stream")  
-    part.set_payload(open("testshot.jpg", "rb").read())  
-    encoders.encode_base64(part)  
-    part.add_header('Content-Disposition', 'attachment; filename="testshot.jpg"')   # File name and format name
-    msg.attach(part)  
-   
-    try:  
-       s = smtplib.SMTP('smtp.gmail.com', 587)  # Protocol
-       s.ehlo()  
-       s.starttls()  
-       s.ehlo()  
-       s.login(user = '', password = '')  # User id & password
-       #s.send_message(msg)  
-       s.sendmail(me, toaddr, msg.as_string())  
-       s.quit()  
-    #except:  
-    #   print ("Error: unable to send email")    
-    except smtplib.SMTPException:  
-          print ("Error")    
+   ```bash
+   git clone https://github.com/YourGitHubUsername/rpi-security-camera.git
