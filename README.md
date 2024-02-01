@@ -17,5 +17,4 @@ This project uses a Raspberry Pi along with a camera module and an ultrasonic se
 1. Connect the Ultrasonic Sensor and Camera Module to the Raspberry Pi.
 2. Clone this repository to your Raspberry Pi:
 
-   ```bash
-   git clone https://github.com/YourGitHubUsername/rpi-security-camera.git
+
